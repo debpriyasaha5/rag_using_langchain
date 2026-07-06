@@ -1,0 +1,10 @@
+openai
+python-dotenv
+flask
+langchain
+langchain_core
+langchain-openai
+langchain-community
+langchain-text-splitters
+pinecone
+langchain-pinecone
