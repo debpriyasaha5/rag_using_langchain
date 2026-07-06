@@ -3,8 +3,6 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from rag_system import Rag_Core
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-
 
 def build_answer(query, vector_store, chat_history=None):
     chat_history = chat_history or []
@@ -28,6 +26,7 @@ def build_answer(query, vector_store, chat_history=None):
             for user_q, assistant_a in recent_history
         )
 
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     prompt = ChatPromptTemplate.from_messages(
         [
             (
