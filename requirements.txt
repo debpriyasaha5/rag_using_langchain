@@ -1,6 +1,8 @@
-Flask==3.1.1
-gunicorn==23.0.0
-
-openai==1.99.9
+Flask==3.1.0
+langchain==0.3.27
+langchain-openai==0.3.28
+langchain-pinecone==0.2.11
+pinecone==7.3.0
+openai==1.97.1
 python-dotenv==1.1.1
-PyYAML==6.0.3
+gunicorn==23.0.0
