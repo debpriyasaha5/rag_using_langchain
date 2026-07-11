@@ -28,6 +28,23 @@ class Rag_Core:
         print(f"Using OpenAI embedding model: {embedding_model}")
         return embeddings
 
+    def load_vector_store(self, embeddings):
+        index_name = os.getenv("PINECONE_INDEX_NAME")
+        if not index_name:
+            raise ValueError("PINECONE_INDEX_NAME is not set in the environment.")
+
+        client = self.get_pinecone_client()
+        if not client.has_index(index_name):
+            raise ValueError(
+                f"Pinecone index '{index_name}' does not exist yet. Run the indexing step once before chatting."
+            )
+
+        vector_store = PineconeVectorStore.from_existing_index(
+            index_name=index_name,
+            embedding=embeddings,
+        )
+        print(f"Loaded existing Pinecone index '{index_name}'.")
+        return vector_store
 
     def get_pinecone_client(self):
         api_key = os.getenv("PINECONE_API_KEY")
