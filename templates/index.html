@@ -9,7 +9,7 @@
         <h2>GenAI Chatbot</h2>
 
         <div class="disclaimer">
-            <strong>Disclaimer:</strong> This assistant can help answer questions, summarize information, and guide you through the document content. It may not always be fully accurate, so please verify important details separately.
+            <strong>Disclaimer:</strong> 👋 Welcome! Ask questions about the provided DSA.pdf document. This assistant answers using only the information available in the document.
         </div>
 
         <div id="chat"></div>
@@ -35,12 +35,57 @@ function addMessage(text, sender) {
     chat.scrollTop = chat.scrollHeight;
 }
 
+function showTypingIndicator() {
+    const id = "typing-" + Date.now();
+
+    const chatWindow = document.getElementById("chat");
+
+    const botMessage = document.createElement("div");
+    botMessage.className = "bot-message";
+    botMessage.id = id;
+
+    botMessage.innerHTML = `
+        <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+
+    chatWindow.appendChild(botMessage);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    return id;
+}
+function removeTypingIndicator(id) {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.remove();
+    }
+}
+
 async function sendMessage() {
     const message = input.value.trim();
     if (!message) return;
 
+    // Display user's message
     addMessage(message, "user");
     input.value = "";
+
+    // Create typing indicator
+    const loader = document.createElement("div");
+    loader.className = "message bot";
+    loader.id = "typing-loader";
+    loader.innerHTML = `
+        <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+    chat.appendChild(loader);
+    chat.scrollTop = chat.scrollHeight;
 
     try {
         const response = await fetch("/chat", {
@@ -53,9 +98,19 @@ async function sendMessage() {
 
         const data = await response.json();
         const botReply = data.response || data.answer || "No response";
+
+        // Remove loader
+        document.getElementById("typing-loader").remove();
+
+        // Show bot response
         addMessage(botReply, "bot");
+
     } catch (error) {
         console.error(error);
+
+        // Remove loader
+        document.getElementById("typing-loader").remove();
+
         addMessage("Sorry, I could not process that request.", "bot");
     }
 }
@@ -123,6 +178,7 @@ function toggleListening() {
 }
 
 micBtn.addEventListener("click", toggleListening);
+
 </script>
 
 </body>
